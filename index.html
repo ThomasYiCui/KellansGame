@@ -138,7 +138,7 @@
                 case "game":
                     ctx.fillStyle = "rgb(0, 150, 255)";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    camX = -playerX + 300;
+                    camX = -playerX + canvas.width/2;
                     if(level === 1) {
                         block(0, canvas.height - 10, 100, 10)
                         block(150, canvas.height - 65, 100, 10)
