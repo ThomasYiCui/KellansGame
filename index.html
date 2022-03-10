@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kellans Game</title>
+        <style>
+            body {
+                position: fixed;
+            }
+            #canvi {
+                margin-left: -10px;
+                margin-top: -10px;
+            }
+        </style>
+    </head>
+    <body>
+    <canvas id="canvi"></canvas>
+    
+    <script>
+        // makes it more like javascript
+        var canvas = document.getElementById("canvi");
+        var ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var mouseX = 0;
+        var mouseY = 0;
+        var clicked = false
+        var dragged = false
+        var keys = [];
+        function start() {
+            myVar = setInterval(draw, 1);
+        }
+        canvas.addEventListener("mousemove", function(e) { 
+            var cRect = canvas.getBoundingClientRect();
+            mouseX = Math.round(e.clientX - cRect.left);
+            mouseY = Math.round(e.clientY - cRect.top);
+        });
+        canvas.addEventListener("mousedown", function(e) {
+            dragged = true;
+        }, false);
+        canvas.addEventListener("mouseup", function(e) {
+            if(dragged === true) {
+                clicked = true;
+                dragged = false;
+            }
+        })
+        window.addEventListener("keydown", keysPressed, false);
+        window.addEventListener("keyup", keysReleased, false);
+        function keysPressed(e) {
+            // store an entry for every key pressed
+            keys[e.keyCode] = true;
+         
+            e.preventDefault();
+        }
+         
+        function keysReleased(e) {
+            // mark keys that were released
+            keys[e.keyCode] = false;
+        }
+        function constrain(targ, min, max) {
+            if(targ < min) {
+                targ = min;
+            } else if(targ > max) {
+                targ = max;
+            }
+            return targ;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        // game
+        var level = 2;
+        var respawn = [[0, canvas.height - 40], [0, canvas.height - 30]];
+        var respawnX = respawn[level - 1][0];
+        var respawnY = respawn[level - 1][1];
+        var playerX = respawnX;
+        var playerY = respawnY;
+        var dead = false;
+        var paccX = 0;
+        var paccY = 0;
+        var grounded = false;
+        var scene = "game";
+        var bg = "rgb(0, 150, 255)";
+        var camX = 0;
+        function button(x, y, w, h, t, txt) {
+            strokeWeight(3)
+            eRect(x, y, w, h, (0, 0, 0))
+            textAlign("center")
+            text(txt[0], x + w/2, y + h/2 + txt[1]/4, txt[1])
+            if(mouseX > x && mouseY > y && mouseX < x + w && mouseY < y + h && clicked) {
+                t();
+            }
+        }
+        function block(x, y, w, h) {
+            ctx.fillStyle = "rgb(100, 100, 100)"
+            ctx.fillRect(x + camX, y, w, h)
+            if(playerX + 20 + paccX > x && playerY + 10 > y && playerX < x + w + paccX && playerY < y + h) {
+                paccX *= 0.5;
+            }
+            if(playerX + 10 > x && playerY + 20 + paccY > y && playerX < x + w && playerY < y + h + paccY) {
+                paccY *= 0;
+                paccX *= 0.99;
+                if(paccY > 0) {
+                    playerY -= (playerY - (y - h/2))/10;
+                } else {
+                    playerY += (playerY - (y - h/2))/20;
+                    grounded = true;
+                }
+            }
+        }
+        function portal(x, y, w, h) {
+            ctx.fillStyle = "rgb(0, 200, 0)"
+            ctx.fillRect(x + camX, y, w, h)
+            if(playerX + 20 > x && playerY + 10 > y && playerX < x + w && playerY < y + h) {
+                level+=1;
+                respawnX = respawn[level - 1][0];
+                respawnY = respawn[level - 1][1];
+                playerX = respawnX;
+                playerY = respawnY;
+            }
+        }
+        function lava(x, y, w, h) {
+            ctx.fillStyle = "rgb(2000, 0, 0)"
+            ctx.fillRect(x + camX, y, w, h)
+            if(playerX + 20 > x && playerY + 10 > y && playerX < x + w && playerY < y + h) {
+                playerX = respawnX;
+                playerY = respawnY;
+            }
+        }
+        
+        function draw() { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            switch(scene) {
+                case "game":
+                    ctx.fillStyle = "rgb(0, 150, 255)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    camX = -playerX + 300;
+                    if(level === 1) {
+                        block(0, canvas.height - 10, 100, 10)
+                        block(150, canvas.height - 65, 100, 10)
+                        block(300, canvas.height - 120, 100, 10)
+                        block(680, canvas.height - 10, 100, 10)
+                        block(950, canvas.height - 10, 200, 10)
+                        portal(1130, canvas.height - 30, 20, 20)
+                    } else if(level === 2) {
+                        block(0, canvas.height - 10, 400, 10)
+                        block(550, canvas.height - 10, 100, 10)
+                        block(800, canvas.height - 10, 100, 10)
+                        block(950, canvas.height - 10, 200, 10)
+                        portal(1130, canvas.height - 30, 20, 20)
+                        lava(100, canvas.height - 30, 50, 20)
+                        lava(300, canvas.height - 30, 50, 20)
+                        lava(210, canvas.height - 30, 50, 20)
+                    }
+                    ctx.fillStyle = "rgb(0, 0, 0)";
+                    ctx.fillRect(300, playerY, 20, 20);
+                    playerX += paccX;
+                    playerY += paccY;
+                    paccY+=0.01;
+                    paccX*=0.99;
+                    if (keys[65] || keys[37]) {
+                        paccX-=0.01;
+                    }
+                    if (keys[68] || keys[39]) {
+                        paccX+=0.01;
+                    }
+                    if(grounded) {
+                        if (keys[87] || keys[38]) {
+                            paccY = -1;
+                        }
+                    }
+                    if(playerY > canvas.height + 20) {
+                        dead = true;
+                    }
+                    grounded = false;
+                    if(dead) {
+                        playerX = respawnX;
+                        playerY = respawnY;
+                        dead = false
+                    }
+                break;
+            }
+            clicked = false;
+        }
+        draw()
+        start()
+        
+    </script>
+    
+    </body>
+</html>
