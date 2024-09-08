@@ -261,10 +261,12 @@ setInterval(function() {
     ai = [];
     for(let i = 0; i < 20; i++) {
       let newAi = new npc(bestAi.network);
+      /*
       console.log("Pure")
       console.log(newAi.network.network[1][0]);
       console.log("Salt")
       console.log(bestAi.network.network[1][0]);
+      */
       ai.push(newAi);
     }
     //console.log(ai[1].network.network[0][0], ai[0].network.network[0][0]);
