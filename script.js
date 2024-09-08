@@ -165,8 +165,10 @@ function npc(givenNetwork) {
     this.network = new network();
     this.network.newNetwork([4, 4, 5, 5]);
   } else {
+    console.log(givenNetwork);
     this.network = givenNetwork;
     this.network.mutate(1, 1);
+    console.log(this.network);
   }
   this.draw = function() {
     ctx.fillStyle = "red";
