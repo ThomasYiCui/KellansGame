@@ -278,3 +278,4 @@ setInterval(function() {
   genTime-=1;
 }, 15)
 
+// THE TABLE
