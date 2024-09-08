@@ -161,6 +161,7 @@ function npc(givenNetwork) {
   this.score = 0;
   this.hp = 100;
   this.network;
+  console.log(givenNetwork);
   if(!givenNetwork) {
     this.network = new network();
     this.network.newNetwork([4, 4, 5, 5]);
