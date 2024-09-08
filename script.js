@@ -160,8 +160,9 @@ function npc(givenNetwork) {
   this.memory3 = 0;
   this.score = 0;
   this.hp = 100;
-  this.network = new network();
+  this.network;
   if(!givenNetwork) {
+    this.network = new network();
     this.network.newNetwork([4, 4, 5, 5]);
   } else {
     this.network = givenNetwork;
