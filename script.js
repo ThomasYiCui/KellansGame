@@ -150,7 +150,7 @@ function network() {
   }
 }
 
-function npc(network) {
+function npc(givenNetwork) {
   //this.x = canvas.width/4 + Math.random() * canvas.width/2;
   //this.y = canvas.height/4 + Math.random() * canvas.height/2;
   this.x = canvas.width/2;
@@ -161,10 +161,10 @@ function npc(network) {
   this.score = 0;
   this.hp = 100;
   this.network = new network();
-  if(!network) {
+  if(!givenNetwork) {
     this.network.newNetwork([4, 4, 5, 5]);
   } else {
-    this.network = network;
+    this.network = givenNetwork;
     this.network.mutate(1, 1);
   }
   this.draw = function() {
