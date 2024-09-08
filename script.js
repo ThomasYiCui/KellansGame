@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>replit</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <canvas id="canvi"></canvas>
+    <script src="setup.js"></script>
+<script>
 var canvas = document.getElementById("canvi");
 var ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -116,14 +130,20 @@ function network() {
     for(let i in this.network) {
       for(let n in this.network[i]) {
         if(Math.random() < rate) {
-          this.network[i][n].bias += -weight + Math.random() * weight * 2;
-          this.network[i][n].bias = constrain(this.network[i][n].bias, -10, 10)
+        	/**
+        	this.network[i][n].bias += -weight + Math.random() * weight * 2;
+        	this.network[i][n].bias = constrain(this.network[i][n].bias, -10, 10)
+            */
+          this.network[i][n].bias+=-weight + Math.random() * weight * 2;
         }
         for(let c in this.network[i][n].connections) {
           let connection = this.network[i][n].connections[c];
           if(Math.random() < rate) {
+          	/**
             connection.weight += -weight + Math.random() * weight * 2;
             connection.weight = constrain(connection.weight, -10, 10)
+            */
+            connection.weight+=-weight + Math.random() * weight * 2;
           }
         }
       }
@@ -161,17 +181,28 @@ function npc(givenNetwork) {
   this.score = 0;
   this.hp = 100;
   this.network;
-  console.log(givenNetwork);
-  if(!givenNetwork) {
-    this.network = new network();
-    this.network.newNetwork([4, 4, 5, 5]);
-  } else {
-    console.log(givenNetwork);
-    this.network = givenNetwork;
+  this.network = new network();
+   this.network.newNetwork([4, 4, 5, 5]);
+  if(givenNetwork) {
+  	for(let layer in this.network) {
+    	for(let node in this.network[layer]) {
+        	let curNode = this.network[layer][node];
+            let givenNode = givenNetwork.network[layer][node];
+            console.log(givenNode);
+           	curNode.bias = givenNode.bias;
+            for(let connection in curNode.connections) {
+            	let curConnection = curNode.connections[connection];
+                let givenConnection = givenNode.connections[connection]
+                curConnection.weighta = curConnection.weight;
+                console.log(givenConnection);
+            }
+        }
+    }
     this.network.mutate(1, 1);
-    console.log(this.network);
   }
-  this.network.mutate(10, 10);
+  if(givenNetwork) {
+    console.log("Before mutation: " + givenNetwork.network[0][0].bias);
+  }
   this.draw = function() {
     ctx.fillStyle = "red";
     ctx.beginPath();
@@ -222,12 +253,20 @@ function npc(givenNetwork) {
 }
 
 let ai = [];
-for(let i = 0; i < 20; i++) {
+for(let i = 0; i < 200; i++) {
   ai.push(new npc());
 }
 let gen = 0;
 let genTime = 0;
 let highScore;
+let bestScore;
+let bestAi;
+for(let i in ai) {
+  if(!bestScore || bestScore < ai[i].score) {
+    bestAi = ai[i];
+    bestScore = ai[i].score;
+  }
+}
 
 setInterval(function() {
   ctx.fillStyle = "rgb(200, 200, 200)";
@@ -239,14 +278,6 @@ setInterval(function() {
     ai[i].run(false);
     ai[i].rate();
   }
-  let bestScore;
-  let bestAi;
-  for(let i in ai) {
-    if(!bestScore || bestScore < ai[i].score) {
-      bestAi = ai[i];
-      bestScore = ai[i].score;
-    }
-  }
   //bestAi.network.display();
   if(genTime % 10 < 5) {
     ai[0].network.display();
@@ -257,10 +288,16 @@ setInterval(function() {
     highScore = bestScore;
   }
   if(genTime <= 0) {
+    for(let i in ai) {
+      if(!bestScore || bestScore < ai[i].score) {
+        bestAi = ai[i];
+        bestScore = ai[i].score;
+      }
+    }
     gen+=1;
     genTime = 300;
     ai = [];
-    for(let i = 0; i < 20; i++) {
+    for(let i = 0; i < 200; i++) {
       let newAi = new npc(bestAi.network);
       /*
       console.log("Pure")
@@ -278,3 +315,7 @@ setInterval(function() {
 }, 15)
 
 // THE TABLE
+</script>
+</body>
+
+</html>
