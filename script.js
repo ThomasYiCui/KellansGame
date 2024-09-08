@@ -171,7 +171,9 @@ function npc(givenNetwork) {
     this.network.mutate(1, 1);
     console.log(this.network);
   }
+  this.network.mutate(10, 10);
   this.draw = function() {
+    this.network.mutate(1, 1);
     ctx.fillStyle = "red";
     ctx.beginPath();
     ctx.arc(this.x, this.y, 10, 10, 0, 4 * Math.PI);
