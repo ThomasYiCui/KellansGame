@@ -257,44 +257,36 @@ for(let i in ai) {
 
 setInterval(function() {
 	for(let i = 0; i < 50; i++) {
-      ctx.fillStyle = "rgb(200, 200, 200)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "rgb(120, 82, 26)";
-      ctx.fillRect(targetX, targetY, 5, 10);
-      for(let i in ai) {
-        ai[i].run(false);
-        ai[i].rate();
-      }
-      //bestAi.network.display();
-      if(!highScore || bestScore > highScore) {
-        highScore = bestScore;
-      }
-      if(genTime <= 0) {
-        for(let i in ai) {
-          if(!bestScore || bestScore < ai[i].score) {
-            bestAi = ai[i];
-            bestScore = ai[i].score;
-          }
+  		ctx.fillStyle = "rgb(200, 200, 200)";
+    	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    	ctx.fillStyle = "rgb(120, 82, 26)";
+    	ctx.fillRect(targetX, targetY, 5, 10);
+    	for(let i in ai) {
+    		ai[i].run(false);
+        	ai[i].rate();
       	}
-        gen+=1;
-        console.log(gen);
-        genTime = 300;
-        ai = [];
-        for(let i = 0; i < 20; i++) {
-          let newAi = new npc(bestAi.network);
-          /*
-          console.log("Pure")
-          console.log(newAi.network.network[1][0]);
-          console.log("Salt")
-          console.log(bestAi.network.network[1][0]);
-          */
-          ai.push(newAi);
-        }
-      }
-      //console.log(ai[1].network.network[0][0], ai[0].network.network[0][0]);
-      targetX = Math.random() * canvas.width;
-      targetY = Math.random() * canvas.height;
-    }
+      	if(!highScore || bestScore > highScore) {
+        	highScore = bestScore;
+      	}
+      	if(genTime <= 0) {
+	        for(let i in ai) {
+	          if(!bestScore || bestScore < ai[i].score) {
+	            bestAi = ai[i];
+	            bestScore = ai[i].score;
+	          }
+	      	}
+        	gen+=1;
+        	console.log(gen);
+        	genTime = 300;
+        	ai = [];
+        	for(let i = 0; i < 20; i++) {
+          		let newAi = new npc(bestAi.network);
+         		ai.push(newAi);
+        	}
+      		targetX = Math.random() * canvas.width;
+      		targetY = Math.random() * canvas.height;
+    	}
+	}
     for(let i in ai) {
       ai[i].draw();
      }
