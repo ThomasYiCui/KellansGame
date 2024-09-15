@@ -290,7 +290,7 @@ setInterval(function() {
     for(let i in ai) {
       ai[i].draw();
      }
-     if(genTime % 10 < 5) {
+    if(genTime % 10 < 5) {
       ai[0].network.display();
     } else {
       ai[1].network.display();
@@ -299,7 +299,6 @@ setInterval(function() {
     ctx.fillStyle = "rgb(0, 0, 0)";
     ctx.font = "30px Arial";
     ctx.fillText(bestScore, canvas.width/2, 50);
-  }
 }, 15)
 
 // THE TABLE
